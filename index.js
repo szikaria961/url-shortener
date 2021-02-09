@@ -49,6 +49,7 @@ app.get('/', async (req, res, next) => {
 });
 
 app.get('/:urlCode', async (req, res, next) => {
+  try {
     const { urlCode } = req.params;
     const record = await Url.findOne({ urlCode });
 
@@ -58,6 +59,9 @@ app.get('/:urlCode', async (req, res, next) => {
     await record.save()
 
     res.redirect(record.longLink);
+  } catch (error) {
+    next(error);
+  }
 });
 
 app.post('/', async (req, res, next) => {
