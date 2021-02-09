@@ -13,7 +13,7 @@ const urlSchema = new mongoose.Schema({
   longLink: { type: String, required: true },
   shortLink: { type: String },
   urlCode: { type: String },
-  clickCount: { type: Number },
+  clickCount: { type: Number, default: 0 },
 });
 
 const Url = mongoose.model("Url", urlSchema);
@@ -21,6 +21,8 @@ const Url = mongoose.model("Url", urlSchema);
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.set('view engine', 'ejs');
 
 const startApplication = async () => {
   await mongoose.connect("mongodb://localhost:27017/links", {
@@ -37,27 +39,37 @@ const startApplication = async () => {
 
 startApplication();
 
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
-
-app.get('/api/urlshortener', async (req, res, next) => {
+app.get('/', async (req, res, next) => {
   try {
     const data = await Url.find({});
-    res.json(data);
+    res.render('pages/index', { data });
   } catch (error) {
     next(error);
   }
 });
 
-app.post('/api/urlshortener', async (req, res, next) => {
+app.get('/:urlCode', async (req, res, next) => {
+    const { urlCode } = req.params;
+    const record = await Url.findOne({ urlCode });
+
+    if (!record) return res.sendStatus(404)
+
+    record.clickCount++;
+    await record.save()
+
+    res.redirect(record.longLink);
+});
+
+app.post('/', async (req, res, next) => {
   try {
     const { longLink } = req.body;
     const urlCode = shortid.generate();
     const shortLink = `${BASE_URL}/${urlCode}`;
 
-    const input = { longLink, shortLink, urlCode, clickCount: 0 }
-    res.json(await Url.create(input));
+    const input = { longLink, shortLink, urlCode }
+    await Url.create(input);
+    const data = await Url.find({});
+    res.render('pages/index', { data });
   } catch (error) {
     next(error);
   }
