@@ -1,5 +1,4 @@
 const express = require('express');
-const mongo = require('mongodb').MongoClient;
 const mongoose = require("mongoose");
 const shortid = require("shortid");
 require("dotenv").config();
@@ -25,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 
 const startApplication = async () => {
-  await mongoose.connect("mongodb://localhost:27017/links", {
+  await mongoose.connect(MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
