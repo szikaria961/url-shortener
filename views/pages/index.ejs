@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+  <form action="/" method="POST">
+    <input type="text" id="url" name="longLink" value="" placeholder="enter url"><br><br>
+    <input type="submit" value="Shorten">
+  </form>
+  <% for(var i=0; i < data.length; i++) { %>
+    <a href="<%= data[i].shortLink %>"><%= data[i].shortLink %></a> Shortened Link for: <%= data[i].longLink %>, has been clicked: <%= data[i].clickCount %> times<br>
+  <% } %>
+</body>
+</html>
