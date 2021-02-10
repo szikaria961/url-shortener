@@ -41,23 +41,6 @@ mongod
 
 View development app at `http://localhost:8000`
 
-## Deployment
-
-### Cloud (Heroku)
-
-_\* Make sure you have [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) installed, have created a heroku app and are logged in to the cli._
-
-```
-npm run deploy
-```
-
-### Manual Production Build
-
-```
-npm run build
-npm start
-```
-
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
